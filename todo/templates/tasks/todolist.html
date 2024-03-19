@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+
+<meta charset="utf-8">
+<title>{{title}}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--style-->
+<style>
+body {
+    background-color: #f8f9fa; /* Light Gray */
+    color: #212529; /* Dark Gray */
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1),
+                0 6px 20px 0 rgba(0,0,0,0.08);
+    background: #fff; /* White */
+    margin-bottom: 20px;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),
+                0 6px 20px 0 rgba(0,0,0,0.15);
+}
+
+.submit_form {
+    text-align: center;
+    padding: 20px;
+    background: #28a745; /* Green */
+    border-radius: 15px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1),
+                0 6px 20px 0 rgba(0,0,0,0.08);
+}
+
+.submit_form input[type="submit"] {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 15px;
+    background-color: #08aeea; /* White */
+    color: #f4f6f7; /* Green */
+    font-size: 16px;
+    margin-top: 10px;
+    
+}
+
+.submit_form input[type="submit"]:hover {
+    background-color: #e2e6ea; /* Light Gray */
+    color: #2a28a7; /* Green */
+}
+
+.logout-link {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 8px 16px;
+    border-radius: 15px;
+    color: #fff; /* White */
+    text-decoration: none;
+    background-color: #d9534f; /* Red */
+    border: none;
+}
+
+.logout-link:hover {
+    background-color: #c9302c; /* Darker Red */
+}
+
+.message-box {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8d7da; /* Light Red */
+    border-radius: 10px;
+}
+
+.message-box p {
+    margin: 0;
+    color: #721c24; /* Dark Red */
+    font-weight: bold;
+}
+
+</style>
+
+</head>
+
+<body class="container-fluid">
+
+<a href="{% url 'logout' %}" class="logout-link btn btn-danger">Logout</a>
+
+<center class="row">
+    <h1><i style="font-family: Georgia, 'Times New Roman', Times, serif; color: #343a40;">Make Order</i></h1>
+    <hr />
+</center>
+
+{% if messages %}
+<div class="message-box">
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="row">
+
+    <div class="col-md-8">
+        {% for task in list %}
+    <div class="card">
+        <center><b>{{ task.title }}</b></center>
+        <hr/>
+        <p><strong>Due Date:</strong> {{ task.due_date }}</p>
+        <hr/>
+        <p><strong>Task Details:</strong>{{ task.details }}</p>
+        <hr/>
+        <p><strong>Priority:</strong> {{ task.priority }}</p>
+        <hr/>
+        <p><strong>Created At:</strong> {{ task.created_at }}</p>
+        <hr/>
+        <hr/>
+        <p><strong>Status:</strong> 
+        {% if task.is_complete %}
+            Complete
+        {% else %}
+            Incomplete
+        {% endif %} </p>
+        <hr/>
+        <form method="post" action="{% url 'toggle_status' task.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-info">Change Status</button>
+        </form>
+        <div class="d-flex flex-row ">
+            <div>
+                <form action="/del/{{ task.id }}" method="POST" style="padding-right: 4%; padding-bottom: 3%;">
+                    {% csrf_token %}
+                    <button value="remove" type="submit" class="btn btn-danger" style="float: right;"><span class="glyphicon glyphicon-trash"></span> Remove</button>
+                </form>
+            </div>
+            <div>
+                <form action="/edit/{{ task.id }}" method="POST" style="padding-right: 4%; padding-bottom: 3%; margin-top: -26px;">
+                    {% csrf_token %}
+                    <button value="edit" type="submit" class="btn btn-primary" style="float: right; margin-right: 10px; margin-bottom: 10px;"><span class="glyphicon glyphicon-pencil"></span> Edit</button>
+                </form>
+        
+            </div>
+            
+            
+        </div>
+    </div>
+    {% endfor %}
+
+    </div>
+    <div class="col-md-1"> </div>
+    <div class="col-md-3" >
+
+
+<div class="submit_form">
+    <form method="POST">
+        {% csrf_token %}
+        {{form}}
+        <center>
+        <input type="submit" class="btn btn-default" value="Submit" />
+    </center>
+    </form>
+    </div>
+</div>
+</div>
+</body>
+
+</html>
