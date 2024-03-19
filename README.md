@@ -27,7 +27,7 @@ To run this project locally on your machine, follow these steps:
 2. **Navigate to the Project Directory:**
 
     ```bash
-    cd todo-web-app
+    cd todo
     ```
 
 3. **Create a Virtual Environment (optional):**
